@@ -1,0 +1,24 @@
+{
+	"name": "juniwalk/api-wedos",
+	"license": "MIT",
+
+	"authors": [{
+		"name": "Martin Procházka",
+		"email": "juniwalk@outlook.cz"
+	}],
+
+	"autoload": {
+		"psr-4": {"JuniWalk\\Wedos\\": "src/"}
+	},
+
+	"require": {
+		"php": ">=7.4",
+		"guzzlehttp/guzzle": "^7.0",
+		"nette/schema": "^1.0",
+		"nette/utils": "^3.0"
+	},
+
+    "suggest": {
+        "nette/di": "For integration into Nette project"
+    }
+}
