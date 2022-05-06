@@ -77,7 +77,7 @@ class Connector
 			throw $e;
 		}
 
-		return Response::fromResult($result, $request);
+		return Response::fromResult($request, $result);
 	}
 
 
