@@ -7,13 +7,12 @@
 
 namespace JuniWalk\Wedos;
 
-use GuzzleHttp\Client;
+use Exception;
+use JuniWalk\Wedos\Exceptions\RequestException;
 use JuniWalk\Wedos\Exceptions\ResponseException;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 class Connector
 {
@@ -23,16 +22,16 @@ class Connector
 	const URL = 'https://api.wedos.com/wapi/json';
 
 	/** @var string */
-	private $user;
+	protected $user;
 
 	/** @var string */
-	private $secret;
+	protected $secret;
 
 	/** @var bool */
-	private $isTest;
+	protected $isTest;
 
-	/** @var Client */
-	private $http;
+	/** @var mixed[] */
+	protected $config;
 
 
 	/**
@@ -50,42 +49,36 @@ class Connector
 		$this->user = $user;
 		$this->secret = $this->hash($user, $password);
 		$this->isTest = $isTest;
-		$this->http = new Client($params + [
-			'base_uri' => static::URL,
-			'timeout' => 5
-		]);
+		$this->config = $params;
 	}
 
 
 	/**
 	 * @param  string  $action
+	 * @param  string  $clTRID
 	 * @param  string[]  $data
-	 * @return string[]
-	 * @throws ClientException
+	 * @return Response
+	 * @throws JsonException
 	 * @throws ResponseException
 	 */
-	protected function call(string $action, iterable $data = []): iterable
+	protected function call(string $action, string $clTRID = '', iterable $data = []): Response
 	{
+		$request = new Request(static::URL, $this->config);
+
 		try {
-			$response = $this->http->request('POST', '/', [
-				'form_params' => ['request' => [
-					'user' => $this->user,
-					'auth' => $this->secret,
-					'test' => $this->isTest,
-					'command' => $action,
-					// 'clTRID' => $clTRID,
-					'data' => $data,
-				]],
+			$result = $request->execute($action, [
+				'user' => $this->user,
+				'auth' => $this->secret,
+				'test' => $this->isTest,
+				'clTRID' => $clTRID,
+				'data' => $data,
 			]);
 
-		} catch (ClientException $e) {
+		} catch (RequestException $e) {
 			throw $e;
 		}
 
-		$result = $response->getBody()->getContents();
-		$result = Json::decode($result, Json::FORCE_ARRAY);
-
-		return $result;
+		return Response::fromResult($action, $result);
 	}
 
 

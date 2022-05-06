@@ -7,15 +7,27 @@
 
 namespace JuniWalk\Wedos\Exceptions;
 
+use JuniWalk\Wedos\Response;
+
 final class ResponseException extends AbstractException
 {
 	/**
 	 * @param  string  $action
-	 * @param  string[]  $result
 	 * @return static
 	 */
-	public static function fromResult(string $action, iterable $result): self
+	public static function withoutResponse(string $action): self
 	{
-		return new static($action.': '.$result['message']);
+		return new static($action.': Response from the result is missing');
+	}
+
+
+	/**
+	 * @param  string  $action
+	 * @param  Response  $response
+	 * @return static
+	 */
+	public static function fromResponse(string $action, Response $response): self
+	{
+		return new static($action.': '.$response->getResult(), $response->getCode());
 	}
 }
