@@ -33,6 +33,32 @@ trait VariousSubsystem
 
 
 	/**
+	 * @return Response
+	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-poll-req/
+	 */
+	public function pollRequest(): Response
+	{
+		return $this->call('poll-req');
+	}
+
+
+	/**
+	 * @param  int  $id
+	 * @return Response
+	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-poll-ack/
+	 */
+	public function pollAcknowledge(int $id): Response
+	{
+		$params['id'] = $id;
+		$params = $this->check($params, [
+			'id'	=> Expect::int()->required(),
+		]);
+
+		return $this->call('poll-ack', '', $params);
+	}
+
+
+	/**
 	 * @param  DateTime  $dateFrom
 	 * @param  DateTime  $dateTo
 	 * @return Response
