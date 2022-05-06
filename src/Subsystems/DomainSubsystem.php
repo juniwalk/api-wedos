@@ -14,12 +14,12 @@ trait DomainSubsystem
 {
 	/**
 	 * @param  string  $name
-	 * @param  string[]  $params
 	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domain-info/
 	 */
-	public function domainInfo(string $name, iterable $params = []): Response
+	public function domainInfo(string $name): Response
 	{
+		$params = [];
 		$params['name'] = $name;
 		$params = $this->check($params, [
 			'name'	=> Expect::string()->required(),
@@ -32,12 +32,12 @@ trait DomainSubsystem
 	/**
 	 * @param  string  $name
 	 * @param  int  $period
-	 * @param  string[]  $params
 	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domain-renew/
 	 */
-	public function domainRenew(string $name, int $period = 1, iterable $params = []): Response
+	public function domainRenew(string $name, int $period = 1): Response
 	{
+		$params = [];
 		$params['name'] = $name;
 		$params['period'] = $period;
 		$params = $this->check($params, [
@@ -51,12 +51,12 @@ trait DomainSubsystem
 
 	/**
 	 * @param  string|null  $status
-	 * @param  string[]  $params
 	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domains-list/
 	 */
-	public function domainsList(string $status = null, iterable $params = []): Response
+	public function domainsList(string $status = null): Response
 	{
+		$params = [];
 		$params['status'] = $status;
 		$params = $this->check($params, [
 			'status'	=> Expect::string()->nullable(),

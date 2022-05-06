@@ -49,6 +49,7 @@ trait VariousSubsystem
 	 */
 	public function pollAcknowledge(int $id): Response
 	{
+		$params = [];
 		$params['id'] = $id;
 		$params = $this->check($params, [
 			'id'	=> Expect::int()->required(),
@@ -66,6 +67,7 @@ trait VariousSubsystem
 	 */
 	public function accountList(DateTime $dateFrom, DateTime $dateTo): Response
 	{
+		$params = [];
 		$params['date_from'] = $dateFrom->format('Y-m-d');
 		$params['date_to'] = $dateTo->format('Y-m-d');
 		$params = $this->check($params, [
