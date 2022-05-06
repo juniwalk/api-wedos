@@ -39,7 +39,7 @@ trait DomainSubsystem
 	{
 		$params['status'] = $status;
 		$params = $this->check($params, [
-			'status'	=> Expect::string(),
+			'status'	=> Expect::string()->nullable(),
 		]);
 
 		return $this->call('domain-list', '', $params);
