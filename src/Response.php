@@ -23,7 +23,7 @@ class Response
 	/** @var string */
 	protected $action;
 
-	/** @var stdClass */
+	/** @var stdClass|null */
 	protected $data;
 
 
@@ -31,9 +31,9 @@ class Response
 	 * @param string  $action
 	 * @param int  $code
 	 * @param string  $result
-	 * @param stdClass  $data
+	 * @param stdClass|null  $data
 	 */
-	public function __construct(string $action, int $code, string $result, stdClass $data)
+	public function __construct(string $action, int $code, string $result, ?stdClass $data)
 	{
 		$this->action = $action;
 		$this->code = $code;
