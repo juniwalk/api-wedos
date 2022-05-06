@@ -14,28 +14,28 @@ use stdClass;
 
 class Response
 {
+	/** @var Request */
+	protected $request;
+
 	/** @var int */
 	protected $code;
 
 	/** @var string */
 	protected $result;
 
-	/** @var string */
-	protected $action;
-
 	/** @var stdClass|null */
 	protected $data;
 
 
 	/**
-	 * @param string  $action
+	 * @param Request  $request
 	 * @param int  $code
 	 * @param string  $result
 	 * @param stdClass|null  $data
 	 */
-	public function __construct(string $action, int $code, string $result, ?stdClass $data)
+	public function __construct(Request $request, int $code, string $result, ?stdClass $data)
 	{
-		$this->action = $action;
+		$this->request = $request;
 		$this->code = $code;
 		$this->result = $result;
 		$this->data = $data;
@@ -43,15 +43,16 @@ class Response
 
 
 	/**
-	 * @param  string  $action
+	 * @param  Request  $request
 	 * @param  string  $result
 	 * @return self
 	 * @throws JsonException
 	 * @throws ResponseException
 	 */
-	public static function fromResult(string $action, string $result): self
+	public static function fromResult(Request $request, string $result): self
 	{
 		$result = Json::decode($result);
+		$action = $request->getAction();
 
 		if (!isset($result->response)) {
 			throw ResponseException::withoutResponse($action);
@@ -59,7 +60,7 @@ class Response
 
 		$response = $result->response;
 		$response = new static(
-			$action,
+			$request,
 			$response->code,
 			$response->result,
 			$response->data ?? null

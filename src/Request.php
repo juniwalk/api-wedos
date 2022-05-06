@@ -10,6 +10,7 @@ namespace JuniWalk\Wedos;
 use JuniWalk\Wedos\Exceptions\RequestException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use Nette\Utils\Random;
 use Nette\Utils\Strings;
 
 class Request
@@ -17,18 +18,45 @@ class Request
 	/** @var string */
 	protected $url;
 
+	/** @var string */
+	protected $queryId;
+
+	/** @var string */
+	protected $action;
+
 	/** @var string[] */
 	protected $params = [];
 
 
 	/**
+	 * @param string  $action
 	 * @param string  $url
 	 * @param string[]  $params
 	 */
-	public function __construct(string $url, iterable $params = [])
+	public function __construct(string $action, string $url, iterable $params = [])
 	{
+		$this->action = $action;
 		$this->url = $url;
 		$this->params = $params;
+		$this->queryId = Random::generate();
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getAction(): string
+	{
+		return $this->action;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getQueryId(): string
+	{
+		return $this->queryId;
 	}
 
 
@@ -38,9 +66,10 @@ class Request
 	 * @return string
 	 * @throws RequestException
 	 */
-	public function execute(string $action, iterable $data): string
+	public function execute(iterable $data): string
 	{
-		$data['command'] = $action;
+		$data['clTRID'] = $this->queryId;
+		$data['command'] = $this->action;
 		$data = Json::encode(['request' => $data]);
 		$data = 'request='.urlencode($data);
 

@@ -56,22 +56,20 @@ class Connector
 
 	/**
 	 * @param  string  $action
-	 * @param  string  $clTRID
 	 * @param  string[]  $data
 	 * @return Response
 	 * @throws JsonException
 	 * @throws ResponseException
 	 */
-	protected function call(string $action, string $clTRID = '', iterable $data = []): Response
+	protected function call(string $action, iterable $data = []): Response
 	{
-		$request = new Request(static::URL, $this->config);
+		$request = new Request($action, static::URL, $this->config);
 
 		try {
-			$result = $request->execute($action, [
+			$result = $request->execute([
 				'user' => $this->user,
 				'auth' => $this->secret,
 				'test' => $this->isTest,
-				'clTRID' => $clTRID,
 				'data' => $data,
 			]);
 
@@ -79,7 +77,7 @@ class Connector
 			throw $e;
 		}
 
-		return Response::fromResult($action, $result);
+		return Response::fromResult($result, $request);
 	}
 
 
