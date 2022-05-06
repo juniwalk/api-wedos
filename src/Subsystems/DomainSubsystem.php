@@ -24,13 +24,4 @@ trait DomainSubsystem
 
 		return $this->call('domain-info', '', $params);
 	}
-
-
-	/**
-	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-ping/
-	 */
-	public function ping(): bool
-	{
-		return $this->call('ping')->isOk();
-	}
 }

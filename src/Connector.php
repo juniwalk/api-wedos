@@ -17,6 +17,7 @@ use Nette\Schema\ValidationException;
 class Connector
 {
 	use Subsystems\DomainSubsystem;
+	use Subsystems\VariousSubsystem;
 
 	/** @var string */
 	const URL = 'https://api.wedos.com/wapi/json';
