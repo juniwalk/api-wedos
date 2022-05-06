@@ -27,4 +27,21 @@ trait DomainSubsystem
 
 		return $this->call('domain-info', '', $params);
 	}
+
+
+	/**
+	 * @param  string|null  $status
+	 * @param  string[]  $params
+	 * @return Response
+	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domains-list/
+	 */
+	public function domainList(string $status = null, iterable $params = []): Response
+	{
+		$params['status'] = $status;
+		$params = $this->check($params, [
+			'status'	=> Expect::string(),
+		]);
+
+		return $this->call('domain-list', '', $params);
+	}
 }
