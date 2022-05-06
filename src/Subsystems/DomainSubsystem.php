@@ -35,13 +35,13 @@ trait DomainSubsystem
 	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domains-list/
 	 */
-	public function domainList(string $status = null, iterable $params = []): Response
+	public function domainsList(string $status = null, iterable $params = []): Response
 	{
 		$params['status'] = $status;
 		$params = $this->check($params, [
 			'status'	=> Expect::string()->nullable(),
 		]);
 
-		return $this->call('domain-list', '', $params);
+		return $this->call('domains-list', '', $params);
 	}
 }
