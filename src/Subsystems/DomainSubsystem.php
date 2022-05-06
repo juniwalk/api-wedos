@@ -30,6 +30,26 @@ trait DomainSubsystem
 
 
 	/**
+	 * @param  string  $name
+	 * @param  int  $period
+	 * @param  string[]  $params
+	 * @return Response
+	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domain-renew/
+	 */
+	public function domainRenew(string $name, int $period = 1, iterable $params = []): Response
+	{
+		$params['name'] = $name;
+		$params['period'] = $period;
+		$params = $this->check($params, [
+			'name'		=> Expect::string()->required(),
+			'period'	=> Expect::int()->required(),
+		]);
+
+		return $this->call('domain-renew', '', $params);
+	}
+
+
+	/**
 	 * @param  string|null  $status
 	 * @param  string[]  $params
 	 * @return Response
