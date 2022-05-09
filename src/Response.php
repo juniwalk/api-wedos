@@ -23,22 +23,31 @@ class Response
 	/** @var string */
 	protected $result;
 
+	/** @var int */
+	protected $timestamp;
+
+	/** @var string */
+	protected $clTRID;
+
+	/** @var string */
+	protected $svTRID;
+
+	/** @var string */
+	protected $command;
+
+	/** @var bool */
+	protected $test = false;
+
 	/** @var stdClass|null */
 	protected $data;
 
 
 	/**
 	 * @param Request  $request
-	 * @param int  $code
-	 * @param string  $result
-	 * @param stdClass|null  $data
 	 */
-	public function __construct(Request $request, int $code, string $result, ?stdClass $data)
+	public function __construct(Request $request)
 	{
 		$this->request = $request;
-		$this->code = $code;
-		$this->result = $result;
-		$this->data = $data;
 	}
 
 
@@ -51,31 +60,18 @@ class Response
 	 */
 	public static function fromResult(Request $request, string $result): self
 	{
+		$response = new static($request);
 		$result = Json::decode($result);
-		$action = $request->getAction();
 
-		if (!isset($result->response)) {
-			throw ResponseException::withoutResponse($action);
+		if (!isset($result->response) || $result->response->code >= 2000) {
+			throw ResponseException::fromResponse(
+				$request->getCommand(),
+				$result->response ?? null
+			);
 		}
 
-		$response = $result->response;
-		$response = new static(
-			$request,
-			$response->code,
-			$response->result,
-			$response->data ?? null
-		);
-
-		switch ($response->getCode()) {
-			case 1000:	// OK
-			case 1001:	// Request pending
-			case 1002:	// Notification aquired (accepted)
-			case 1003:	// Empty notifications queue
-			case 2151:	// Notification does not exist
-				break;
-
-			default:
-				throw ResponseException::fromResponse($action, $response);
+		foreach ((array) $result->response as $key => $value) {
+			$response->$key = $value;
 		}
 
 		return $response;
@@ -103,9 +99,18 @@ class Response
 	/**
 	 * @return string
 	 */
-	public function getAction(): string
+	public function getQueryId(): string
 	{
-		return $this->action;
+		return $this->clTRID;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getCommand(): string
+	{
+		return $this->command;
 	}
 
 
@@ -115,6 +120,15 @@ class Response
 	public function getData(): ?stdClass
 	{
 		return $this->data;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isTest(): bool
+	{
+		return (bool) $this->test;
 	}
 
 

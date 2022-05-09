@@ -19,35 +19,26 @@ class Request
 	protected $url;
 
 	/** @var string */
-	protected $queryId;
+	protected $clTRID;
 
 	/** @var string */
-	protected $action;
+	protected $command;
 
 	/** @var string[] */
 	protected $params = [];
 
 
 	/**
-	 * @param string  $action
+	 * @param string  $command
 	 * @param string  $url
 	 * @param string[]  $params
 	 */
-	public function __construct(string $action, string $url, iterable $params = [])
+	public function __construct(string $command, string $url, iterable $params = [])
 	{
-		$this->action = $action;
-		$this->url = $url;
+		$this->clTRID = Random::generate();
+		$this->command = $command;
 		$this->params = $params;
-		$this->queryId = Random::generate();
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getAction(): string
-	{
-		return $this->action;
+		$this->url = $url;
 	}
 
 
@@ -56,20 +47,28 @@ class Request
 	 */
 	public function getQueryId(): string
 	{
-		return $this->queryId;
+		return $this->clTRID;
 	}
 
 
 	/**
-	 * @param  string  $action
+	 * @return string
+	 */
+	public function getCommand(): string
+	{
+		return $this->command;
+	}
+
+
+	/**
 	 * @param  string[]  $data
 	 * @return string
 	 * @throws RequestException
 	 */
 	public function execute(iterable $data): string
 	{
-		$data['clTRID'] = $this->queryId;
-		$data['command'] = $this->action;
+		$data['command'] = $this->command;
+		$data['clTRID'] = $this->clTRID;
 		$data = Json::encode(['request' => $data]);
 		$data = 'request='.urlencode($data);
 
