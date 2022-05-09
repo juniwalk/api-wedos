@@ -7,12 +7,8 @@
 
 namespace JuniWalk\Wedos;
 
-use Exception;
 use JuniWalk\Wedos\Exceptions\RequestException;
 use JuniWalk\Wedos\Exceptions\ResponseException;
-use Nette\Schema\Expect;
-use Nette\Schema\Processor;
-use Nette\Schema\ValidationException;
 
 class Connector
 {
@@ -55,15 +51,15 @@ class Connector
 
 
 	/**
-	 * @param  string  $action
+	 * @param  string  $command
 	 * @param  string[]  $data
 	 * @return Response
 	 * @throws JsonException
 	 * @throws ResponseException
 	 */
-	protected function call(string $action, iterable $data = []): Response
+	protected function call(string $command, iterable $data = []): Response
 	{
-		$request = new Request($action, static::URL, $this->config);
+		$request = new Request($command, static::URL, $this->config);
 
 		try {
 			$result = $request->execute([
@@ -78,29 +74,6 @@ class Connector
 		}
 
 		return Response::fromResult($request, $result);
-	}
-
-
-	/**
-	 * @param  string[]  $params
-	 * @param  Expect[]  $schema
-	 * @return string[]
-	 * @throws ValidationException
-	 */
-	protected function check(iterable $params, iterable $schema): iterable
-	{
-		$schema = Expect::structure($schema)
-			->skipDefaults()
-			->castTo('array');
-
-		try {
-			$params = (new Processor)->process($schema, $params);
-
-		} catch (ValidationException $e) {
-			throw $e;
-		}
-
-		return $params;
 	}
 
 
