@@ -57,7 +57,7 @@ class Connector
 	 * @throws JsonException
 	 * @throws ResponseException
 	 */
-	protected function call(string $command, iterable $data = []): Response
+	public function call(string $command, iterable $data = []): Response
 	{
 		$request = new Request($command, static::URL, $this->config);
 
