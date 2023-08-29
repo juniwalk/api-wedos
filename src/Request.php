@@ -93,7 +93,7 @@ class Request
 		$result = curl_exec($curl);
 
 		if (!$result || curl_errno($curl)) {
-			throw RequestException::fromCurl($curl);
+			throw RequestException::fromCurl($this->command, $curl);
 		}
 
 		return $result;
