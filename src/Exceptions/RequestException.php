@@ -16,7 +16,7 @@ final class RequestException extends AbstractException
 	 */
 	public static function fromCurl(string $action, $curl): self
 	{
-		return new static($action.': '.curl_error($curl), curl_error($curl));
+		return new static($action.': '.curl_error($curl), curl_errno($curl));
 	}
 
 
