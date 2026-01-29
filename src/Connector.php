@@ -9,7 +9,11 @@ namespace JuniWalk\Wedos;
 
 use JuniWalk\Wedos\Exceptions\RequestException;
 use JuniWalk\Wedos\Exceptions\ResponseException;
+use Nette\Utils\JsonException;
 
+/**
+ * @phpstan-import-type RequestData from Request
+ */
 class Connector
 {
 	use Subsystems\DomainSubsystem;
@@ -18,56 +22,34 @@ class Connector
 	/** @var string */
 	const URL = 'https://api.wedos.com/wapi/json';
 
-	/** @var string */
-	protected $user;
-
-	/** @var string */
-	protected $secret;
-
-	/** @var bool */
-	protected $isTest;
-
-	/** @var mixed[] */
-	protected $config;
+	protected string $secret;
 
 
 	/**
-	 * @param  string  $user
-	 * @param  string  $password
-	 * @param  string  $isTest
-	 * @param  string[]  $params
+	 * @param array<string, string> $config
 	 */
 	public function __construct(
-		string $user,
+		protected string $user,
 		string $password,
-		bool $isTest = false,
-		iterable $params = []
+		protected bool $isTest = false,
+		protected array $config = [],
 	) {
-		$this->user = $user;
 		$this->secret = $this->hash($user, $password);
-		$this->isTest = $isTest;
-		$this->config = $params;
 	}
 
 
 	/**
-	 * @param  string  $command
-	 * @param  string[]  $data
-	 * @return Response
+	 * @param  RequestData $data
 	 * @throws JsonException
 	 * @throws ResponseException
 	 */
-	public function call(string $command, iterable $data = []): Response
+	public function call(string $command, array $data = []): Response
 	{
-		$request = new Request($command, static::URL, $this->config);
+		$request = new Request($this->user, $this->secret, $command, static::URL, $this->config);
+		$request->setTest($this->isTest);
 
 		try {
-			$result = $request->execute([
-				'user' => $this->user,
-				'auth' => $this->secret,
-				'test' => $this->isTest,
-				'data' => $data,
-			]);
+			$result = $request->execute($data);
 
 		} catch (RequestException $e) {
 			throw $e;
@@ -77,11 +59,6 @@ class Connector
 	}
 
 
-	/**
-	 * @param	string	$user
-	 * @param	string	$password
-	 * @return	string
-	 */
 	protected function hash(string $user, string $password): string
 	{
 		return sha1($user.sha1($password).date('H'));

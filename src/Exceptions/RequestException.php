@@ -7,23 +7,24 @@
 
 namespace JuniWalk\Wedos\Exceptions;
 
+use CurlHandle;
+
 final class RequestException extends AbstractException
 {
-	/**
-	 * @param  string  $action
-	 * @param  resource  $curl
-	 * @return static
-	 */
-	public static function fromCurl(string $action, $curl): self
+	public static function fromCurl(string $action, CurlHandle|false $curl): self
 	{
-		return new static($action.': '.curl_error($curl), curl_errno($curl));
+		$message = 'Unknown';
+		$code = 0;
+
+		if ($curl !== false) {
+			$message = curl_error($curl);
+			$code = curl_errno($curl);
+		}
+
+		return new static($action.': '.$message, $code);
 	}
 
 
-	/**
-	 * @param  string  $option
-	 * @return static
-	 */
 	public static function fromOption(string $option): self
 	{
 		return new static('No CURL option named "'.$option.'" is defined');

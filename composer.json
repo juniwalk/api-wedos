@@ -11,13 +11,33 @@
 		"psr-4": {"JuniWalk\\Wedos\\": "src/"}
 	},
 
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"config": {
+		"discard-changes": true,
+		"sort-packages": true,
+		"allow-plugins": {
+			"phpstan/extension-installer": true
+		}
+	},
+
 	"require": {
 		"php": ">=7.4",
 		"guzzlehttp/guzzle": "^7.0",
 		"nette/utils": "^3.0|^4.0"
 	},
 
-    "suggest": {
-        "nette/di": "For integration into Nette project"
-    }
+	"require-dev": {
+		"nette/di": "^3.0",
+		"phpstan/extension-installer": "^1.0",
+		"phpstan/phpstan": "^2.0",
+		"phpstan/phpstan-deprecation-rules": "^2.0",
+		"phpstan/phpstan-doctrine": "^2.0",
+		"phpstan/phpstan-nette": "^2.0",
+		"staabm/phpstan-todo-by": "^0.3"
+	},
+
+	"suggest": {
+		"nette/di": "For integration into Nette project"
+	}
 }

@@ -1,0 +1,13 @@
+parameters:
+	phpVersion:
+		min: 80400
+		max: 80500
+	level: 9
+	paths:
+		- src
+		- tests
+
+	treatPhpDocTypesAsCertain: false
+
+	todo_by:
+		referenceVersion: "nextMinor"

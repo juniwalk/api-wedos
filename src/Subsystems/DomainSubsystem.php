@@ -12,8 +12,6 @@ use JuniWalk\Wedos\Response;
 trait DomainSubsystem
 {
 	/**
-	 * @param  string  $name
-	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domain-info/
 	 */
 	public function domainInfo(string $name): Response
@@ -25,9 +23,6 @@ trait DomainSubsystem
 
 
 	/**
-	 * @param  string  $name
-	 * @param  int  $period
-	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domain-renew/
 	 */
 	public function domainRenew(string $name, int $period = 1): Response
@@ -40,11 +35,9 @@ trait DomainSubsystem
 
 
 	/**
-	 * @param  string|null  $status
-	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-domains-list/
 	 */
-	public function domainsList(string $status = null): Response
+	public function domainsList(?string $status = null): Response
 	{
 		return $this->call('domains-list', [
 			'status' => $status,

@@ -39,6 +39,6 @@ final class WedosExtension extends CompilerExtension
 		$config = $this->getConfig();
 
 		$builder->addDefinition($this->prefix('connector'))
-			->setFactory(Connector::class, $config);
+			->setFactory(Connector::class, (array) $config);
 	}
 }

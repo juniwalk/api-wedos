@@ -14,63 +14,40 @@ use stdClass;
 
 class Response
 {
-	/** @var Request */
-	protected $request;
+	protected int $code;
+	protected string $result;
+	protected int $timestamp;
+	protected string $clTRID;
+	protected string $svTRID;
+	protected string $command;
+	protected bool $test = false;
+	protected ?stdClass $data;
 
-	/** @var int */
-	protected $code;
-
-	/** @var string */
-	protected $result;
-
-	/** @var int */
-	protected $timestamp;
-
-	/** @var string */
-	protected $clTRID;
-
-	/** @var string */
-	protected $svTRID;
-
-	/** @var string */
-	protected $command;
-
-	/** @var bool */
-	protected $test = false;
-
-	/** @var stdClass|null */
-	protected $data;
-
-
-	/**
-	 * @param Request  $request
-	 */
-	public function __construct(Request $request)
-	{
-		$this->request = $request;
+	public function __construct(
+		protected Request $request,
+	) {
 	}
 
 
 	/**
-	 * @param  Request  $request
-	 * @param  string  $result
-	 * @return self
 	 * @throws JsonException
 	 * @throws ResponseException
 	 */
 	public static function fromResult(Request $request, string $result): self
 	{
-		$response = new static($request);
-		$result = Json::decode($result);
+		/** @var object{response?: object{code: int, result: string}} $json */
+		$json = Json::decode($result);
 
-		if (!isset($result->response) || $result->response->code >= 2000) {
+		if (!isset($json->response) || $json->response->code >= 2000) {
 			throw ResponseException::fromResponse(
 				$request->getCommand(),
-				$result->response ?? null
+				$json->response ?? null,
 			);
 		}
 
-		foreach ((array) $result->response as $key => $value) {
+		$response = new self($request);
+
+		foreach ((array) $json->response as $key => $value) {
 			$response->$key = $value;
 		}
 
@@ -78,63 +55,42 @@ class Response
 	}
 
 
-	/**
-	 * @return int
-	 */
 	public function getCode(): int
 	{
 		return $this->code;
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getResult(): string
 	{
 		return $this->result;
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getQueryId(): string
 	{
 		return $this->clTRID;
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getCommand(): string
 	{
 		return $this->command;
 	}
 
 
-	/**
-	 * @return stdClass|null
-	 */
 	public function getData(): ?stdClass
 	{
 		return $this->data;
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function isTest(): bool
 	{
 		return (bool) $this->test;
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function isOk(): bool
 	{
 		return $this->result === 'OK';

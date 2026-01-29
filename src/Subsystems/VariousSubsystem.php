@@ -7,7 +7,7 @@
 
 namespace JuniWalk\Wedos\Subsystems;
 
-use DateTime;
+use DateTimeInterface;
 use JuniWalk\Wedos\Response;
 
 trait VariousSubsystem
@@ -22,7 +22,6 @@ trait VariousSubsystem
 
 
 	/**
-	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-credit-info/
 	 */
 	public function creditInfo(): Response
@@ -32,7 +31,6 @@ trait VariousSubsystem
 
 
 	/**
-	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-poll-req/
 	 */
 	public function pollRequest(): Response
@@ -42,26 +40,23 @@ trait VariousSubsystem
 
 
 	/**
-	 * @param  int  $id
-	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-command-poll-ack/
 	 */
 	public function pollAcknowledge(int $id): Response
 	{
 		return $this->call('poll-ack', [
-			'id' => $id
+			'id' => $id,
 		]);
 	}
 
 
 	/**
-	 * @param  DateTime  $dateFrom
-	 * @param  DateTime  $dateTo
-	 * @return Response
 	 * @see https://kb.wedos.com/en/wapi-api-interface/wapi-account-list/
 	 */
-	public function accountList(DateTime $dateFrom, DateTime $dateTo): Response
-	{
+	public function accountList(
+		DateTimeInterface $dateFrom,
+		DateTimeInterface $dateTo,
+	): Response {
 		return $this->call('account-list', [
 			'date_from' => $dateFrom->format('Y-m-d'),
 			'date_to' => $dateTo->format('Y-m-d'),
