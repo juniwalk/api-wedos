@@ -7,8 +7,16 @@
 
 namespace JuniWalk\Wedos\Exceptions;
 
+use Throwable;
+
 final class ResponseException extends AbstractException
 {
+	public static function fromError(string $command, Throwable $error): self
+	{
+		return new static($command.': '.$error->getMessage(), $error->getCode(), $error);
+	}
+
+
 	/**
 	 * @param object{code: int, result: string} $response
 	 */

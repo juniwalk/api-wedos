@@ -30,13 +30,17 @@ class Response
 
 
 	/**
-	 * @throws JsonException
 	 * @throws ResponseException
 	 */
 	public static function fromResult(Request $request, string $result): self
 	{
-		/** @var object{response?: object{code: int, result: string}} $json */
-		$json = Json::decode($result);
+		try {
+			/** @var object{response?: object{code: int, result: string}} $json */
+			$json = Json::decode($result);
+
+		} catch (JsonException $e) {
+			throw ResponseException::fromError($request->getCommand(), $e);
+		}
 
 		if (!isset($json->response) || $json->response->code >= 2000) {
 			throw ResponseException::fromResponse(
