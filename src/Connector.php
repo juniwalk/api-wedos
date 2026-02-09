@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Wedos;
 
+use JuniWalk\Wedos\Exceptions\RateLimitedException;
 use JuniWalk\Wedos\Exceptions\RequestException;
 use JuniWalk\Wedos\Exceptions\ResponseException;
 use Nette\Utils\JsonException;
@@ -21,6 +22,9 @@ class Connector
 
 	/** @var string */
 	const URL = 'https://api.wedos.com/wapi/json';
+
+	/** @var string */
+	const RateLimitedResult = 'User-Agent Rate Limit';
 
 	protected string $secret;
 
@@ -41,6 +45,7 @@ class Connector
 	/**
 	 * @param  RequestData $data
 	 * @throws JsonException
+	 * @throws RateLimitedException
 	 * @throws ResponseException
 	 */
 	public function call(string $command, array $data = []): Response
@@ -53,6 +58,10 @@ class Connector
 
 		} catch (RequestException $e) {
 			throw $e;
+		}
+
+		if ($result === static::RateLimitedResult) {
+			throw new RateLimitedException;
 		}
 
 		return Response::fromResult($request, $result);
