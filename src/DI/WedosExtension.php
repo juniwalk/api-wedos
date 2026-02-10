@@ -21,7 +21,7 @@ final class WedosExtension extends CompilerExtension
 			'password' => Expect::string()->required(),
 			'isTest' => Expect::bool(),
 			'config' => Expect::structure([])
-				->otherItems(Expect::string())
+				->otherItems(Expect::type('string|int|bool'))
 				->castTo('array'),
 		])->castTo('array');
 	}
