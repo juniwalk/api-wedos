@@ -21,7 +21,7 @@ class Response
 	protected string $svTRID;
 	protected string $command;
 	protected bool $test = false;
-	protected ?stdClass $data;
+	protected ?stdClass $data = null;
 
 	public function __construct(
 		protected Request $request,
