@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Wedos;
 
+use JuniWalk\Wedos\Exceptions\CyberProtectionException;
 use JuniWalk\Wedos\Exceptions\RateLimitedException;
 use JuniWalk\Wedos\Exceptions\RequestException;
 use JuniWalk\Wedos\Exceptions\ResponseException;
@@ -44,6 +45,7 @@ class Connector
 
 	/**
 	 * @param  RequestData $data
+	 * @throws CyberProtectionException
 	 * @throws JsonException
 	 * @throws RateLimitedException
 	 * @throws ResponseException
@@ -58,6 +60,10 @@ class Connector
 
 		} catch (RequestException $e) {
 			throw $e;
+		}
+
+		if (preg_match('/doctype|protection/i', $result)) {
+			throw new CyberProtectionException;
 		}
 
 		if ($result === static::RateLimitedResult) {
