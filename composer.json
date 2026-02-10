@@ -1,40 +1,50 @@
 {
 	"name": "juniwalk/api-wedos",
+	"description": "",
+	"type": "library",
+	"keywords": ["nette","nettefw","wedos","api-wedos","wapi"],
 	"license": "MIT",
 
 	"authors": [{
 		"name": "Martin Procházka",
-		"email": "juniwalk@outlook.cz"
+		"email": "juniwalk@outlook.cz",
+		"role": "Developer"
 	}],
-
-	"autoload": {
-		"psr-4": {"JuniWalk\\Wedos\\": "src/"}
-	},
 
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"config": {
-		"discard-changes": true,
 		"sort-packages": true,
 		"allow-plugins": {
 			"phpstan/extension-installer": true
 		}
 	},
 
-	"require": {
-		"php": ">=7.4",
-		"guzzlehttp/guzzle": "^7.0",
-		"nette/utils": "^3.0|^4.0"
+	"autoload": {
+		"psr-4": {"JuniWalk\\Wedos\\": "src/"}
 	},
 
+	"require": {
+		"php": ">=8.4",
+		"guzzlehttp/guzzle": "^7.0|^8.0",
+		"nette/utils": "^4.0"
+	},
+
+    "autoload-dev": {
+        "psr-4": {"JuniWalk\\Tests\\": "tests/"}
+    },
+
 	"require-dev": {
+		"nette/bootstrap": "^3.0",
 		"nette/di": "^3.0",
+		"nette/tester": "^2.0",
 		"phpstan/extension-installer": "^1.0",
 		"phpstan/phpstan": "^2.0",
 		"phpstan/phpstan-deprecation-rules": "^2.0",
 		"phpstan/phpstan-doctrine": "^2.0",
 		"phpstan/phpstan-nette": "^2.0",
-		"staabm/phpstan-todo-by": "^0.3"
+		"staabm/phpstan-todo-by": "^0.3",
+		"tracy/tracy": "^2.0"
 	},
 
 	"suggest": {
