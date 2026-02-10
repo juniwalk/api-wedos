@@ -14,9 +14,6 @@ use Nette\Schema\Schema;
 
 final class WedosExtension extends CompilerExtension
 {
-	/**
-	 * @return Schema
-	 */
 	public function getConfigSchema(): Schema
 	{
 		return Expect::structure([
@@ -30,10 +27,7 @@ final class WedosExtension extends CompilerExtension
 	}
 
 
-	/**
-	 * @return void
-	 */
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig();
